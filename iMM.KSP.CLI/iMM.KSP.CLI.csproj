@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{42E0D066-DEE1-4E45-8B81-FBC9A43B448C}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{9F69C7B6-7B22-4AE5-BAFB-E4B654EA6D95}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>iMM.KSP.Lib</RootNamespace>
-    <AssemblyName>iMM.KSP.Lib</AssemblyName>
+    <RootNamespace>iMM.KSP.CLI</RootNamespace>
+    <AssemblyName>iMM.KSP.CLI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,25 +41,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\GameInfo.cs" />
-    <Compile Include="Base\Mod.cs" />
-    <Compile Include="Base\BaseModCollection.cs" />
-    <Compile Include="Base\ModInfo.cs" />
-    <Compile Include="Base\Part.cs" />
-    <Compile Include="Base\PartInfo.cs" />
-    <Compile Include="Base\Plugin.cs" />
-    <Compile Include="Base\PluginInfo.cs" />
-    <Compile Include="Collection\ModFolder\ModFolderModCollection.cs" />
-    <Compile Include="Enabler\BasePartEnabler.cs" />
-    <Compile Include="Enabler\DefaultPartEnabler.cs" />
-    <Compile Include="ModManager.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\iMM.KSP.Lib\iMM.KSP.Lib.csproj">
+      <Project>{42e0d066-dee1-4e45-8b81-fbc9a43b448c}</Project>
+      <Name>iMM.KSP.Lib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- <Import Project="$(SolutionDir)\.nuget\nuget.targets" /> -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
