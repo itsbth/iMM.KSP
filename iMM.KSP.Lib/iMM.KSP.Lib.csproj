@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\GameInfo.cs" />
     <Compile Include="Base\Mod.cs" />
     <Compile Include="Base\ModCollection.cs" />
     <Compile Include="Base\ModInfo.cs" />
