@@ -8,6 +8,6 @@ namespace iMM.KSP.Lib.Base
         {
         }
 
-        public abstract IEnumerable<Part> Parts { get; }
+        public abstract IEnumerable<string> Files { get; }
     }
 }

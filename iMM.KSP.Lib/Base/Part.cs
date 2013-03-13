@@ -5,7 +5,7 @@ namespace iMM.KSP.Lib.Base
 {
     public abstract class Part : PartInfo
     {
-        protected Part(string id, string name) : base(id, name)
+        protected Part(string id, string name, Kind type) : base(id, name, type)
         {
         }
 
