@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Caliburn.Micro;
 using iMM.KSP.Lib;
@@ -7,19 +8,27 @@ using iMM.KSP.Lib.Sources.ModFolder;
 
 namespace iMM.KSP.UI.WPF
 {
-    internal class AppViewModel : PropertyChangedBase, IHaveDisplayName
+    internal class AppViewModel : Screen, IHaveDisplayName
     {
         private readonly ModManager _manager;
         private bool _notWorking;
+        private GameInfo _info;
 
         public AppViewModel()
         {
-            var info = new GameInfo("default", "Default", @"D:\Games\KSP\v.18.4-new");
-            var mcl = new ModFolderSource(@"D:\Games\KSP\Mods");
-            _manager = new ModManager(info, mcl);
+            _info = File.Exists("config.json") ? GameInfo.Load("config.json") : new GameInfo("default", "Default", @"D:\Games\KSP\v.19-mod");
+            var mcl = new ModFolderSource(@".\Mods");
+            _manager = new ModManager(_info, mcl);
             Mods = new BindableCollection<ModInfo>(_manager.Mods.Select(CreateModInfo));
             NotWorking = true;
             DisplayName = "iMM KSP Mod Manager";
+        }
+
+        protected override void OnDeactivate(bool close)
+        {
+            base.OnDeactivate(close);
+            if (close)
+                _info.Save("config.json");
         }
 
         public bool NotWorking
@@ -45,8 +54,10 @@ namespace iMM.KSP.UI.WPF
                     foreach (var modInfo in Mods.Where(modInfo => modInfo.ShouldBeEnabled != modInfo.IsEnabled))
                     {
                         _manager.ToggleMod(modInfo.Mod);
+                        modInfo.IsEnabled = modInfo.ShouldBeEnabled;
                     }
                     NotWorking = true;
+                    _info.Save("config.json");
                 });
         }
 
@@ -78,6 +89,7 @@ namespace iMM.KSP.UI.WPF
         {
             Mod = mod;
             IsEnabled = isEnabled;
+            ShouldBeEnabled = isEnabled;
         }
 
         public Mod Mod

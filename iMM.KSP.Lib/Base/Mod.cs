@@ -8,6 +8,6 @@ namespace iMM.KSP.Lib.Base
         {
         }
 
-        public abstract IEnumerable<string> Files { get; }
+        public abstract IEnumerable<ModFile> Files { get; }
     }
 }

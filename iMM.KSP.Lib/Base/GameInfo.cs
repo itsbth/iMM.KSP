@@ -1,9 +1,16 @@
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace iMM.KSP.Lib.Base
 {
     public class GameInfo
     {
+
+        public GameInfo() : this(null, null, null)
+        {
+        }
+
         public GameInfo(string id, string name, string path) : this(id, name, path, new HashSet<string>())
         {
         }
@@ -16,9 +23,19 @@ namespace iMM.KSP.Lib.Base
             EnabledMods = enabledMods;
         }
 
-        public string Id { get; private set; }
-        public string Name { get; private set; }
-        public string Path { get; private set; }
-        public HashSet<string> EnabledMods { get; private set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Path { get; set; }
+        public HashSet<string> EnabledMods { get; set; }
+
+        public static GameInfo Load(string configFile)
+        {
+            return JsonConvert.DeserializeObject<GameInfo>(File.ReadAllText(configFile));
+        }
+
+        public void Save(string configFile)
+        {
+            File.WriteAllText(configFile, JsonConvert.SerializeObject(this));
+        }
     }
 }
