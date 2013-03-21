@@ -18,7 +18,7 @@ namespace iMM.KSP.Lib
         {
             _info = info;
             _source = source;
-            FilterFile = _ => _.Tag != ModFile.TypeTag.Other;
+            FilterFile = _ => _.Tag != ModFile.TypeTag.Other && _.Tag != ModFile.TypeTag.Plugin && _.Tag != ModFile.TypeTag.PluginData;
         }
 
         public Func<ModFile, bool> FilterFile { get; private set; }

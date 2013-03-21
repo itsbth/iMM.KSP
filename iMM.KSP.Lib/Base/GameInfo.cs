@@ -21,12 +21,14 @@ namespace iMM.KSP.Lib.Base
             Name = name;
             Path = path;
             EnabledMods = enabledMods;
+            Data = new Dictionary<string, string>();
         }
 
         public string Id { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
         public HashSet<string> EnabledMods { get; set; }
+        public Dictionary<string, string> Data { get; set; }
 
         public static GameInfo Load(string configFile)
         {
