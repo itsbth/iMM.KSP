@@ -1,6 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using Caliburn.Micro;
 using Microsoft.Win32;
 using iMM.KSP.Lib;
@@ -11,11 +13,12 @@ namespace iMM.KSP.UI.WPF
 {
     internal class AppViewModel : Screen
     {
+        private string _displayName;
         private GameInfo _info;
         private ModManager _manager;
-        private bool _notWorking;
         private IObservableCollection<ModInfo> _mods;
-        private string _displayName;
+        private bool _notWorking;
+        private string _configFile;
 
         public bool NotWorking
         {
@@ -42,9 +45,10 @@ namespace iMM.KSP.UI.WPF
         public void Loaded()
         {
             base.OnActivate();
-            _info = File.Exists("config.json")
-                        ? GameInfo.Load("config.json")
-                        : new GameInfo("default", "Default", @"D:\Games\KSP\v.19-mod");
+            _configFile = Environment.GetCommandLineArgs().FirstOrDefault() ?? "config.json";
+            _info = File.Exists(_configFile)
+                        ? GameInfo.Load(_configFile)
+                        : new GameInfo("default", "Default", @"D:\Games\KSP\v.19-mod2");
             var wm = new WindowManager();
             if (!_info.Data.ContainsKey("ModFolder"))
             {
@@ -55,7 +59,16 @@ namespace iMM.KSP.UI.WPF
                 }
             }
             var mcl = new ModFolderSource(_info.Data["ModFolder"]);
-            _manager = new ModManager(_info, mcl);
+            _manager = new ModManager(_info, mcl)
+                {
+                    ResolveCollision = file =>
+                                       MessageBox.Show(
+                                           String.Format("File {0} is already provided by {1}.\nOverwrite it?",
+                                                         file.Path,
+                                                         _info.GetOwner(file.Path) ?? "the base game"), "File collision",
+                                           MessageBoxButton.YesNo,
+                                           MessageBoxImage.Exclamation) == MessageBoxResult.Yes
+                };
             Mods = new BindableCollection<ModInfo>(_manager.Mods.Select(CreateModInfo));
             NotWorking = true;
             DisplayName = "iMM KSP Mod Manager";
@@ -65,7 +78,7 @@ namespace iMM.KSP.UI.WPF
         {
             base.OnDeactivate(close);
             if (close)
-                _info.Save("config.json");
+                _info.Save(_configFile);
         }
 
         public void Commit()
@@ -139,17 +152,21 @@ namespace iMM.KSP.UI.WPF
 
     internal class ConfigViewModel : Screen
     {
-        public GameInfo Info { get; set; }
-
         public ConfigViewModel()
         {
             DisplayName = "iMM.KSP Config";
         }
 
+        public GameInfo Info { get; set; }
+
         public string ModFolder
         {
             get { return Info.Data.ContainsKey("ModFolder") ? Info.Data["ModFolder"] : ""; }
-            set { Info.Data["ModFolder"] = value; NotifyOfPropertyChange(() => ModFolder); }
+            set
+            {
+                Info.Data["ModFolder"] = value;
+                NotifyOfPropertyChange(() => ModFolder);
+            }
         }
 
         public void OK()

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace iMM.KSP.Lib.Base
@@ -22,6 +23,7 @@ namespace iMM.KSP.Lib.Base
             Path = path;
             EnabledMods = enabledMods;
             Data = new Dictionary<string, string>();
+            Files = new Dictionary<string, HashSet<string>>();
         }
 
         public string Id { get; set; }
@@ -29,6 +31,7 @@ namespace iMM.KSP.Lib.Base
         public string Path { get; set; }
         public HashSet<string> EnabledMods { get; set; }
         public Dictionary<string, string> Data { get; set; }
+        public Dictionary<string, HashSet<string>> Files;
 
         public static GameInfo Load(string configFile)
         {
@@ -38,6 +41,11 @@ namespace iMM.KSP.Lib.Base
         public void Save(string configFile)
         {
             File.WriteAllText(configFile, JsonConvert.SerializeObject(this));
+        }
+
+        public string GetOwner(string path)
+        {
+            return Files.Where(mod => mod.Value.Contains(path)).Select(mod => mod.Key).FirstOrDefault();
         }
     }
 }
