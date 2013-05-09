@@ -45,7 +45,7 @@ namespace iMM.KSP.UI.WPF
         public void Loaded()
         {
             base.OnActivate();
-            _configFile = Environment.GetCommandLineArgs().FirstOrDefault() ?? "config.json";
+            _configFile = Environment.GetCommandLineArgs().Skip(1).FirstOrDefault() ?? "config.json";
             _info = File.Exists(_configFile)
                         ? GameInfo.Load(_configFile)
                         : new GameInfo("default", "Default", @"D:\Games\KSP\v.19-mod2");
